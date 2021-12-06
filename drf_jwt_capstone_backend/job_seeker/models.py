@@ -6,6 +6,7 @@ class Seeker(models.Model):
     last_name = models.CharField(max_length =50, blank=True)
     email = models.CharField(max_length =50, blank=True)
     username = models.ForeignKey('authentication.User', blank=True, null=True, on_delete=models.CASCADE)
+    password = models.ForeignKey('authentication.User', blank=True, null=True, on_delete=models.CASCADE)
     street = models.CharField(max_length =50, blank=True)
     city = models.CharField(max_length =50, blank=True)
     state = models.CharField(max_length =50, blank=True)

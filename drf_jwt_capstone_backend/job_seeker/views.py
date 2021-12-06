@@ -22,3 +22,8 @@ class SeekerList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.Http_201)
         return Response(serializer.errors, status=status.Http_400_BAD_REQUEST)
+
+class SeekerActions(APIView):
+    
+    def edit_profile(request):
+        
