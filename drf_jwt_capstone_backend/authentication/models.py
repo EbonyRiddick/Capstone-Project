@@ -11,5 +11,5 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    pass
-    
+    company_name = models.CharField(max_length =50, blank=True)
+    phone_number = models.IntegerField(blank=True)

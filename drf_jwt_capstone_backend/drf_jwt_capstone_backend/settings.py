@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication.apps.AuthenticationConfig',
     'job_seeker.apps.JobSeekerConfig',
+    'job_poster.apps.JobPosterConfig',
+    'jobs.apps.JobsConfig'
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
+    'phonenumber_field',
 
 ]
 

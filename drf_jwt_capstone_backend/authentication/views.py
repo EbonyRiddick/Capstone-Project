@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.http.response import Http404
-from .serializers import RegistrationSerializer
-from rest_framework import generics, status
+from .serializers import RegistrationSerializer, SeekerRegistrationSerializer, PosterRegistrationSerializer 
+from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
 User = get_user_model()
 
 
@@ -12,15 +11,13 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = RegistrationSerializer
 
-  
-# class UserDetail(APIView):
-#     def get_object(self, pk):
-#         try:
-#             return User.objects.get(pk=pk)
-#         except User.DoesNotExist:
-#             raise Http404
+class SeekerRegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = SeekerRegistrationSerializer
 
-#     def get(self, request, pk):
-#         user = self.get_object(pk)
-#         serializer = UserSerializer(user)
-#         return Response(serializer.data)
+
+class PosterRegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = PosterRegistrationSerializer
