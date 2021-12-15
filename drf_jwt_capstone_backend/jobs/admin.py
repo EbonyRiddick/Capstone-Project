@@ -3,11 +3,11 @@ from .models import JobListings
 # Register your models here.
 
 class ListingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title',  'company', 'zip_code','start_date', 'end_date')
-    list_display_links = ('id', 'title')
-    list_filter = ('company', )
-    search_fields = ('title', 'description',  'zipcode', 'company')
+    list_display = ('id', 'job_title',  'user', 'zip_code','start_date', 'end_date')
+    list_display_links = ('id', 'job_title')
+    list_filter = ('user', )
+    search_fields = ('job_title','zip_code', 'company_name')
     list_per_page = 25
 
 
-admin.site.jobs(JobListings, ListingAdmin)
+admin.site.register(JobListings, ListingAdmin)

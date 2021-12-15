@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'job_seeker.apps.JobSeekerConfig',
     'job_poster.apps.JobPosterConfig',
-    'jobs.apps.JobsConfig'
+    'jobs.apps.JobsConfig',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'phonenumber_field',

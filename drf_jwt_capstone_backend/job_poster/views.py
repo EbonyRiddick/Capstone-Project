@@ -6,6 +6,7 @@ from . serializer import PosterSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.urls import reverse
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -32,7 +33,7 @@ class PosterRegistration(APIView):
 
 class PosterProfile(APIView):
     permission_classes = [IsAuthenticated]
-    def get_poster_info(self, pk):
+    def get_poster_info(self, user_id):
         try:
             return PosterProfile.objects.get(pk=pk)
         except PosterProfile.DoesNotExist:
@@ -55,3 +56,16 @@ class PosterProfile(APIView):
         poster = self.get_poster_info(pk)
         poster.delete()
         return Response(status = status.HTTP_204_NO_CONTENT)
+
+class EditPoster(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def update (request, user_id):
+        update_poster= PosterProfile.objects.get(id= user_id)
+        update_poster.company_name = request.POST.get('company_name')
+        update_poster.email = request.POST.get('email')
+        update_poster.phone_number = request.POST.get('phone_number')
+        update_poster.save()
+        return HttpResponseRedirect (reverse('job_poster:PosterProfile'))
+
+

@@ -9,15 +9,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 User = get_user_model()
-
+from django.urls import reverse
 
 
 
 class AllSeekers(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         seeker = SeekerProfile.objects.all()
-        serializer = SeekerSerializer(seeker, many=True)
+        serializer = SeekerSerializer(seeker, many=True, partial = True)
         return Response(serializer.data)
 
 
@@ -33,9 +33,9 @@ class SeekerRegistration(APIView):
 
 class SeekerProfile(APIView):
     permission_classes = [IsAuthenticated]
-    def get_seeker_info(self, pk):
+    def get_seeker_info(self, user_id):
         try:
-            return SeekerProfile.objects.get(pk=pk)
+            return SeekerProfile.objects.get(pk=user_id)
         except SeekerProfile.DoesNotExist:
             raise Http404
 
@@ -57,6 +57,17 @@ class SeekerProfile(APIView):
         seeker.delete()
         return Response(status = status.HTTP_204_NO_CONTENT)
 
-class UpdateSeekerInfo(APIView):
+
+class EditSeeker(APIView):
     permission_classes = [IsAuthenticated]
 
+    def update (request, user_id):
+        update_seeker= SeekerProfile.objects.get(id= user_id)
+        update_seeker.street = request.POST.get('street')
+        update_seeker.city = request.POST.get('city')
+        update_seeker.state = request.POST.get('state')
+        update_seeker.zip_code = request.POST.get('zip_code')
+        update_seeker.email = request.POST.get('email')
+        update_seeker.phone_number = request.POST.get('phone_number')
+        update_seeker.save()
+        return HttpResponseRedirect (reverse('job_seeker:SeekerProfile'))
