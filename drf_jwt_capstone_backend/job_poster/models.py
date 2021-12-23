@@ -12,7 +12,7 @@ class PosterProfile(models.Model):
     city = models.CharField(max_length =50, blank=True)
     state = models.CharField(max_length =50, blank=True)
     zip_code = models.CharField(max_length =50, blank=True)
-    jobs_posted = models.CharField(max_length =50, blank=True)
+    jobs_posted = models.CharField(max_length =50, blank=True, default = 0)
     is_company = models.BooleanField(default = True)
    
 

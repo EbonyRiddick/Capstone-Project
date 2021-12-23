@@ -1,61 +1,18 @@
 from django.http.response import HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import permissions
+from rest_framework import  status
 from .models import JobListings
 from .serializers import JobListingsSerializer, JobListingsDetailSerializer
 from datetime import datetime, timezone, timedelta
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
+from rest_framework.permissions import IsAuthenticated
+from django.http.response import Http404
 
 class JobsListingsView(APIView):
-    queryset = JobListings.objects.order_by('start_date').filter(is_active=True)
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = JobListingsSerializer
-
-class ListingCreate(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request, format=None):
-        data = self.request.data
-
-        job_title = data['job_title']
-        company_name = data['company_name']
-        description = data['description']
-        zip_code = ['zip_code']
-        wage = data['wage']
-        start_date= data['start_date']
-        end_date= data['end_date']
-  
-        try:
-            print(".............")
-            print(company_name)
-
-            listing = JobListings(
-                title=job_title, 
-                company=company_name,
-                zip_code = zip_code ,
-                wage=wage,
-                start_date=start_date, 
-                end_date=end_date,
-                description=description)
-
-            listing.save(force_insert=True)
-            return Response({'success': "Success"})
-            
-        except Exception as e:
-            return Response({'error': e})
-
-
-class JobListingsDetailsView(APIView):
-    queryset = JobListings.objects.order_by('start_date').filter(is_active=True)
-    serializer_class = JobListingsDetailSerializer
-    
-class JobSearchView(APIView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = JobListingsSerializer
+    def get(self, request):
+        listings =JobListings.objects.all()
+        serializer = JobListingsSerializer(listings, many=True)
+        return Response(serializer.data)
 
     def post(self, request):
         queryset = JobListings.objects.order_by('start_date').filter(is_active=True)
@@ -85,6 +42,30 @@ class JobSearchView(APIView):
 
         if wage != -1:
             queryset = queryset.filter(wage__gte=wage)
+
+class ListingCreate(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        serializer = JobListingsDetailSerializer (data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.Http_201_CREATED)
+        return Response (serializer.errors, status = status.Http_400_BAD_REQUEST)
+
+
+
+class JobListingsDetailsView(APIView):
+    def get_object(self, pk):
+        try:
+            return JobListings.objects.get(pk=pk)
+        except JobListings.DoesNotExist:
+            raise Http404
+
+    
+
+
+
+    
 
 
 
